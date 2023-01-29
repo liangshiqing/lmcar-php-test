@@ -65,4 +65,54 @@ class ProductHandlerTest extends TestCase
 
         $this->assertEquals(143, $totalPrice);
     }
+
+    /**
+     * 计算商品总金额
+     */
+    public function testGetPriceTotal()
+    {
+        $priceArr = array_column($this->products, 'price');
+        $totalPrice = array_sum($priceArr);
+        echo '计算商品总金额结果:'.$totalPrice.PHP_EOL;
+    }
+
+    /**
+     * 商品数组排序且过滤出指定key的商品
+     *
+     * @param string $filter
+     * @param string $sort
+     */
+    public function testFilterSortData($filter = 'Dessert',$sort = 'DESC')
+    {
+        //商品按照金额大小排序
+        $data = $this->products;
+        $newArr = array_column($data,'price');
+        $order = $sort =='DESC' ? SORT_DESC : SORT_ASC;
+        array_multisort($newArr,$order,$data);
+
+        //过滤指定商品种类
+        foreach ($data as $key => $value) {
+            if ($value['type'] != $filter){
+                unset($data[$key]);
+            }
+        }
+        echo '数组排序且过滤结果:'.PHP_EOL;
+        print_r($data);
+    }
+
+    /**
+     * 日期转时间戳
+     */
+    public function testDateToStrTime()
+    {
+        //日期转时间戳
+        $data = $this->products;
+        foreach ($data as $key => $value) {
+            $data[$key]['create_at'] = strtotime($value['create_at']);
+        }
+        echo '数组时间转时间戳结果:'.PHP_EOL;
+        print_r($data);
+    }
+
+
 }
